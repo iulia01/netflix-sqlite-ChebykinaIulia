@@ -12,7 +12,7 @@ def create_tables(conn, old_conn):
                         date_added varchar(50),
                         release_year int check(release_year <= 2020),
                         rating varchar(10),
-                        format varchar(10) check(format in ('Minute', 'Seasons')),
+                        format varchar(10) check(format in ('Minutes', 'Seasons')),
                         duration int,
                         description text);""")
     cursor.execute("""create table directors(
@@ -41,7 +41,7 @@ def create_tables(conn, old_conn):
     for row in old_conn.execute("""select * from netflix_titles"""):
         show_id, type, title, director, cast, country, date_added, release_year, rating, duration, listed_in, description = row
         if 'min' in duration:
-            format = 'Minute'
+            format = 'Minutes'
         else:
             format = 'Seasons'
         duration = int(duration.split()[0])
