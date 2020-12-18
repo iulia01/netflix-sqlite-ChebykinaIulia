@@ -45,21 +45,17 @@ def create_tables(conn, old_conn):
         shows = show_id, title, date_added, release_year, rating,  type, duration, description
         cursor.execute("insert into shows values(?,?,?,?,?,?,?,?)", shows)
         for d in set(director.split(', ')):
-            if d != '':
-                lst = d, show_id
-                cursor.execute("insert into directors values(?,?)", lst)
+            lst = d, show_id
+            cursor.execute("insert into directors values(?,?)", lst)
         for c in set(country.split(', ')):
-            if c != '':
-                lst = c, show_id
-                cursor.execute("insert into countries values(?,?)", lst)
+            lst = c, show_id
+            cursor.execute("insert into countries values(?,?)", lst)
         for a in set(cast.split(', ')):
-            if a != '':
-                lst = a, show_id
-                cursor.execute("insert into actors values(?,?)", lst)
+            lst = a, show_id
+            cursor.execute("insert into actors values(?,?)", lst)
         for g in set(listed_in.split(', ')):
-            if g != '':
-                lst = g, show_id
-                cursor.execute("insert into genres values(?,?)", lst)
+            lst = g, show_id
+            cursor.execute("insert into genres values(?,?)", lst)
     conn.commit()
 
 
