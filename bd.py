@@ -3,16 +3,13 @@ import sqlite3
 
 def create_tables(conn, old_conn):
     cursor = conn.cursor()
-    cursor.execute("""
-    PRAGMA foreign_keys=on;""")
     cursor.execute("""create table shows(
                         show_id int primary key,
-                        type varchar(10) check (type in ('Movie', 'TV Show')),
                         title text, 
                         date_added varchar(50),
                         release_year int check(release_year <= 2020),
                         rating varchar(10),
-                        format varchar(10) check(format in ('Minutes', 'Seasons')),
+                        type varchar(10) check(type in ('Movie/Minutes', 'TV Show/Seasons')),
                         duration int,
                         description text);""")
     cursor.execute("""create table directors(
@@ -40,13 +37,13 @@ def create_tables(conn, old_conn):
 
     for row in old_conn.execute("""select * from netflix_titles"""):
         show_id, type, title, director, cast, country, date_added, release_year, rating, duration, listed_in, description = row
-        if 'min' in duration:
-            format = 'Minutes'
+        if type == 'Movie':
+            type += '/Minutes'
         else:
-            format = 'Seasons'
+            type += '/Seasons'
         duration = int(duration.split()[0])
-        shows = show_id, type, title, date_added, release_year, rating, format, duration, description
-        cursor.execute("insert into shows values(?,?,?,?,?,?,?,?,?)", shows)
+        shows = show_id, title, date_added, release_year, rating,  type, duration, description
+        cursor.execute("insert into shows values(?,?,?,?,?,?,?,?)", shows)
         for d in set(director.split(', ')):
             if d != '':
                 lst = d, show_id
